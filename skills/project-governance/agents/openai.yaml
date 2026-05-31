@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Governance"
+  short_description: "Keep repos organized and auditable"
+  default_prompt: "Audit this project structure and tighten its docs, scripts, git hygiene, and agent rules without mixing task details into standing guidance."
