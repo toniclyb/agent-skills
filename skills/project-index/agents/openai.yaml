@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Index"
+  short_description: "Generate two-tier PROJECT_INDEX.md"
+  default_prompt: "Generate or refresh a two-tier PROJECT_INDEX.md for this repository, keeping the index stable and avoiding volatile git status unless requested."

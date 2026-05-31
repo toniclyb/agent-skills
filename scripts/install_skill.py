@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install a skill from this repository into Codex and/or Hermes."""
+"""Install one or all skills from this repository into Codex and/or Hermes."""
 
 from __future__ import annotations
 
@@ -34,9 +34,20 @@ def copy_skill(skill_name: str, destination_root: Path) -> Path:
     return destination
 
 
+def available_skills() -> list[str]:
+    skills_dir = REPO_ROOT / "skills"
+    if not skills_dir.exists():
+        return []
+    return sorted(
+        path.name
+        for path in skills_dir.iterdir()
+        if path.is_dir() and (path / "SKILL.md").exists()
+    )
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("skill", help="skill name under skills/")
+    parser.add_argument("skill", help="skill name under skills/, or 'all'")
     parser.add_argument(
         "--target",
         choices=("codex", "hermes", "all"),
@@ -50,17 +61,21 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    installed = []
-    if args.target in {"codex", "all"}:
-        installed.append(copy_skill(args.skill, args.codex_dir))
-    if args.target in {"hermes", "all"}:
-        installed.append(copy_skill(args.skill, args.hermes_dir))
+    skill_names = available_skills() if args.skill == "all" else [args.skill]
+    if not skill_names:
+        raise SystemExit("No skills found under skills/")
 
-    for path in installed:
-        print(f"Installed {args.skill}: {path}")
+    installed = []
+    for skill_name in skill_names:
+        if args.target in {"codex", "all"}:
+            installed.append((skill_name, copy_skill(skill_name, args.codex_dir)))
+        if args.target in {"hermes", "all"}:
+            installed.append((skill_name, copy_skill(skill_name, args.hermes_dir)))
+
+    for skill_name, path in installed:
+        print(f"Installed {skill_name}: {path}")
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
