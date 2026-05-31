@@ -47,21 +47,6 @@ cd agent-skills
 python3 scripts/install_skill.py project-governance --target all
 ```
 
-## Publish
-
-Create a public GitHub repository after logging in with `gh auth login`:
-
-```bash
-gh repo create agent-skills --public --source . --remote origin --push
-```
-
-If the remote already exists:
-
-```bash
-git remote add origin git@github.com:<owner>/agent-skills.git
-git push -u origin main
-```
-
 ## Repository Rules
 
 - Each skill lives under `skills/<skill-name>/`.
